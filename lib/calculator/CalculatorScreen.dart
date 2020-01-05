@@ -88,8 +88,9 @@ class ButtonArea extends StatelessWidget {
   }
 
   TableCell _backspaceBtn(BuildContext context) {
-    final txt = Text("<", style: TextStyle(fontSize: btnTextSize));
-    final btn = FlatButton(child: txt, onPressed: () => _backspaceHandler(context));
+    final btn = FlatButton(
+        child: Icon(Icons.backspace),
+        onPressed: () => _backspaceHandler(context));
     final coloredBtn = Container(child: btn, decoration: BoxDecoration(color: editColor));
     return TableCell(child: coloredBtn );
   }
