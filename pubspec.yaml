@@ -1,0 +1,33 @@
+name: flutter_calc
+description: Simple Calc
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.2
+  english_words: ^3.1.0
+  intl: ^0.15.7
+  # logger: ^0.6.0
+  provider: ^3.1.0+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  test: 1.6.2
+  # mockito: ^4.0.0
+
+
+flutter:
+
+  uses-material-design: true
+
+
+
+
+

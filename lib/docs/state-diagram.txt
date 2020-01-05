@@ -1,0 +1,49 @@
+@startuml
+
+[*] --> Initial
+Initial: display= n
+Initial: operator= None
+Initial: operand1= None
+
+Initial -> Initial: backspace,\nclear,equals
+Initial -> Initial: any\nnumber n
+
+note left of Initial
+    if just did
+    calculation, then
+    display= result
+end note
+
+
+
+Initial --> NextOperandAwait: any\noperation
+
+NextOperandAwait: display= n
+NextOperandAwait: operator= an operation
+NextOperandAwait: operand1= n
+
+note bottom of NextOperandAwait
+    if just did
+    calculation, then
+    display= result
+end note
+
+NextOperandAwait --> Initial: clear
+NextOperandAwait --> NextOperandAwait: equals
+NextOperandAwait --> NextOperandAwait: any\noperation
+
+
+
+NextOperandAwait --> NextOperandBegun: backspace,\nany\nnumber m
+NextOperandBegun: display= m
+NextOperandBegun: operator= an operation
+NextOperandBegun: operand1= n
+
+NextOperandBegun --> Initial: clear
+NextOperandBegun --> NextOperandBegun: backspace
+
+NextOperandBegun --> Initial: equals\n[do calculation]
+
+NextOperandBegun --> NextOperandAwait: any operation\n[do calculation]
+
+@enduml
