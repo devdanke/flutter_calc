@@ -1,0 +1,192 @@
+
+- calc math state machine
+
+    - transition enum: [ Operator, Number, Backspace, Equal, Clear ]
+    - states enum: [ INIT, BUILD-OP1, BUILD-OP2, ERROR ]
+    - vars: [state, op1, op, op2]
+        - Note: Doesn't include Display variable, which is outside this state machine
+
+    - const: max_digits, max_int
+
+    - Notes:
+        - Maybe choose op1 & op2 types to be int or long.
+          then store in bigint or just detect overflow
+        - In the transitions below "state" is final value after transition.
+
+Transitions
+===========
+
+- INIT
+------
+
+    - initial
+
+        - state = INIT
+        - op = None
+        - op1 = None
+        - op2 = None
+
+    - input Backspace, Clear, Equal =>
+
+        - no change
+        - no event
+
+    - input operator =>
+
+        - state = BUILD-OP2
+        - op = given operator
+        - op1 = 0
+        - op2 = None
+        - fire events: op1.changed, op.changed
+
+    - input number =>
+
+        - state = BUILD-OP1
+        - op = None
+        - op1 = given number
+        - op2 = None
+        - fire events: op1.changed, state.changed
+
+
+- BUILD-OP1
+-----------
+
+    - Initial
+
+        - state = BUILD-OP1
+        - op =  None
+        - op1 = something
+        - op2 = None
+
+    - input Operator =>
+
+        - state = BUILD-OP2
+        - op =  given operator
+        - op1 = no change
+        - op2 = None
+        - events: op.changed(newValue), state.buildOp2(newOp)
+
+    - input Equal =>
+
+        - ignore
+
+    - input Backspace, Clear =>
+
+        - state = no change
+        - op =  no change
+        - op1 = remove a digit or set to 0
+        - op2 = no change
+        - events: if new op1 <> current op1, op1.changed(newValue)
+
+    - input Number =>
+
+        - if no op1 overflow
+
+            - state = no change
+            - op =    no change
+            - op1 =   op1 * 10 + new num
+            - op2 =   no change
+            - events: op1.changed(newVal)
+
+          else
+
+            - state = ERROR
+            - op, op1, op2 = None
+            - event: error.cause(overflow)
+
+
+- BUILD-OP2
+-----------
+
+    - Initial =>
+
+        - state = BUILD-OP2
+        - op = op that lead to
+            NOTE: The only way to get to BUILD-OP2 is when users inputs an op.
+                  So op comes from from BUILD-O1 input op's event op.changed(newOp)
+        - op1 = no change
+        - op2 = None
+
+    - input Equal =>
+
+        - if op2 != None
+
+            - state = BUILD-OP1
+            - op = None
+            - op1 = result of eval(op1, op, op2)
+            - op2 = None
+            - events =
+                - state.changed(BUILD-OP1)
+                - op1.changed(newVal)
+                - op2.changed(None)
+
+          else
+
+            nothing changes
+            event: info.illogicalAction
+                maybe ui can flash or beep
+            log: can't do equals because op2==Null
+
+    - input Clear =>
+
+        - state = INIT
+        - op =    None
+        - op1 =   None
+        - op2 =   None
+        - event = state.changed(INIT), op.changed(None), op1.changed(None), op2.changed(None)
+
+    - input Backspace =>
+
+        - state = BUILD-OP2
+        - op = no change
+        - op1 = no change
+        - op2 =
+            if op2 == None || op2 == 0 then
+                op2 = 0
+            else
+                trunc op2 by one digit
+
+        - events = if op2 changed, then op2.changed(newValue)
+
+    - input Number =>
+
+        - if no op2 overflow
+
+            - state = no change
+            - op =    no change
+            - op1 =   no change
+            - op2 =   op2 * 10 + new num
+            - events: op2.changed(newVal)
+
+          else
+            - state = ERROR
+            - op, op1, op2 = None
+            - event: error.cause(overflow)
+
+    - input Operation =>
+
+        - state = BUILD-OP2
+        - op = replaced by the new op
+        - op1 = no change
+        - op2 = no change
+        - events = fire op.changed(newOp)
+
+
+- ERROR
+-------
+    - Initial
+        - state = ERROR
+        - op,op1,op2=None
+
+    - input Clear
+
+        - state = INIT
+        - op = None
+        - op1 = None
+        - op2 = None
+
+    - input anything else
+
+        - event: info.requestIgnored
+             maybe ui can flash or beep
+             log: Clear is only way back to sanity

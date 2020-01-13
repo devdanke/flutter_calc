@@ -1,13 +1,20 @@
 ## today 
 
+- define transitions from BUILD-OP2
+- define transitions from OVERFLOW
 
-- decide how to extract model into its own dart class <<<
+- create test-cases for each state transition
+    - 1 happy 
+    - 1 unhappy
+    
+- implement calc math state machine
+- write dart unit tests
 
-- extract it
-- find 1-2 use-cases that make the model throw
 
+## next
 
-
+- tips video: https://www.youtube.com/watch?v=E-tL8-ogsWQ
+- tips article: https://medium.com/@liewjuntung/tips-on-using-android-studio-to-develop-flutter-apps-9e42c047b7f4  
 
 ## soon 
 

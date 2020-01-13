@@ -1,0 +1,43 @@
+
+- base data
+    - actions enum:
+        [ Operator, Number, Backspace, Equal, Clear ]
+
+- review states
+
+    - INITIAL
+
+        - state is BUILDING-OPERAND-1
+        - op1 is 0
+        - operand is Noop
+
+    - BUILDING-OPERAND-1
+
+        - valid actions
+            - press Operator ( + - / * ) => which transitions to state HAVE-OP1-AND-OPERATOR
+            - press Backspace changes any non-zero op1
+            - press Clear makes op1 be zero
+            - press Equal is ignored
+            - press Number to change (not too big) op1
+
+        - invalid actions
+            - press Number to change (too big) op1 to ERROR-OVERFLOW-OP1
+
+    - HAVE-OP1-AND-OPERATOR-BUILDING-OP2
+
+        Details:
+            This is before any other button has been pressed.
+            op2 is either 0 or None.
+            Display shows op1.
+
+        - valid actions
+            - press Operator ( + - / * ) => replaces whatever operator is with new one
+                (fire event, so UI can show current op)
+            - press Backspace changes any non-zero op1
+            - press Clear makes op1 be zero
+            - press Equal is ignored
+            - press Number that increases op2 <= limit
+
+        - invalid actions
+
+            - press Number that increases op2 > limit
