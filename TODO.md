@@ -1,14 +1,7 @@
 ## today 
 
-- define transitions from BUILD-OP2
-- define transitions from OVERFLOW
-
-- create test-cases for each state transition
-    - 1 happy 
-    - 1 unhappy
+* write tests for inputOp
     
-- implement calc math state machine
-- write dart unit tests
 
 
 ## next
@@ -24,6 +17,4 @@
 
 ## done
 
-- add backspace icon to flat button 
-- gitify 
 

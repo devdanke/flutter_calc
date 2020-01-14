@@ -13,6 +13,7 @@
           then store in bigint or just detect overflow
         - In the transitions below "state" is final value after transition.
 
+
 Transitions
 ===========
 
@@ -109,23 +110,17 @@ Transitions
 
     - input Equal =>
 
-        - if op2 != None
+        - if op2 == None, then op2 = op1
 
-            - state = BUILD-OP1
-            - op = None
-            - op1 = result of eval(op1, op, op2)
-            - op2 = None
-            - events =
-                - state.changed(BUILD-OP1)
-                - op1.changed(newVal)
-                - op2.changed(None)
+        - state = BUILD-OP1
+        - op = None
+        - op1 = result of eval(op1, op, op2)
+        - op2 = None
+        - events =
+            - state.changed(BUILD-OP1)
+            - op1.changed(newVal)
+            - op2.changed(None)
 
-          else
-
-            nothing changes
-            event: info.illogicalAction
-                maybe ui can flash or beep
-            log: can't do equals because op2==Null
 
     - input Clear =>
 

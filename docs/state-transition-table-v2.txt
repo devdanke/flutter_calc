@@ -1,0 +1,23 @@
+
+start |           | end
+state | action    | state  | note
+-----------------------------
+init  | num       | bop1
+init  | bs,clr,eq | init
+init  | op        | bop2
+
+bop1  | op        | bop2
+bop1  | eq         | bop1
+bop1  | bs,clr    | bop1
+bop1  | num       | bop1
+bop1  | oflow     | error
+
+bop2  | =         | bop1   | if op was None, then first op2 = op1
+bop2  | clr       | init   | op,op1,op2 = None
+bop2  | bs        | bop2   | if op2 = None, op2 = 0
+bop2  | op        | bop2   | replace op
+bop2  | oflow     | error  | op,op1,op2 = None
+bop2  | num       | bop2   | revise op2
+
+error | num,bs,op,eq,oflow | error
+error | clr       | init
