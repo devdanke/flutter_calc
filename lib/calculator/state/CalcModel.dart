@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_calc/calculator/state_keeper.dart';
+import 'package:flutter_calc/calculator/state/state_keeper.dart';
 
 
 ////////////////////////////////////////////////////////////////////////////////
 enum MathOp { NOOP, ADD, SUBTRACT, MULTIPLY, DIVIDE }
+
 
 ////////////////////////////////////////////////////////////////////////////////
 class CalcModel extends ChangeNotifier {
